@@ -11,6 +11,7 @@ import com.management_mobile.context.DBContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +72,45 @@ public class DAO_Invoice {
     }
 
     public void delInvoice(String id) {
-        String sql = "delete from CT_HDBH where MAHDBH=?\n" +
-                    "delete from HoaDonBanHang where MAHDBH=?";
+        String sqlDeleteCT_HDBH = "DELETE FROM CT_HDBH WHERE MAHDBH=?";
+        String sqlDeleteHoaDonBanHang = "DELETE FROM HoaDonBanHang WHERE MAHDBH=?";
+
         try {
             conn = new DBContext().getCon();
-            ps=conn.prepareStatement(sql);
-            ps.setString(1, id);
-            ps.setString(2, id);
-            ps.executeUpdate();
+            conn.setAutoCommit(false); // Bắt đầu một transaction
+
+            // Xoá từ bảng CT_HDBH
+            try (PreparedStatement ps = conn.prepareStatement(sqlDeleteCT_HDBH)) {
+                ps.setString(1, id);
+                ps.executeUpdate();
+            }
+
+            // Xoá từ bảng HoaDonBanHang
+            try (PreparedStatement ps = conn.prepareStatement(sqlDeleteHoaDonBanHang)) {
+                ps.setString(1, id);
+                ps.executeUpdate();
+            }
+
+            conn.commit(); // Commit transaction nếu mọi thứ thành công
         } catch (Exception e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Rollback nếu có lỗi
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace(); // In lỗi ra để dễ dàng kiểm tra
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Đặt lại chế độ auto commit
+                    conn.close(); // Đóng kết nối
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
 }

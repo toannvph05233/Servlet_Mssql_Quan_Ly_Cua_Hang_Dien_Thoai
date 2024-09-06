@@ -22,7 +22,7 @@ public class DAO_Login {
     
     public Account checkLogin(String user, String pass){
         try {
-            String query = "select * from QLCHDD.dbo.TaiKhoan where MATK=? and PASSWORD=?";
+            String query = "select * from TaiKhoan where MATK=? and PASSWORD=?";
             conn = new DBContext().getCon();
             ps=conn.prepareStatement(query);
             ps.setString(1, user);

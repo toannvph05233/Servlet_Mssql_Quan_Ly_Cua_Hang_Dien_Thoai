@@ -10,6 +10,7 @@ import com.management_mobile.context.DBContext;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,33 +80,57 @@ public class DAO_User {
         }
         return false;
     }
-    public void delUser(String maKH){
-        String sql = "";
+    public void delUser(String maKH) {
+        String sqlDeleteTheThanhVien = "DELETE FROM TheThanhVien WHERE MAKH=?";
+        String sqlUpdateHoaDonBanHang = "UPDATE HoaDonBanHang SET MAKH = NULL WHERE MAKH=?";
+        String sqlDeleteKhachHang = "DELETE FROM KhachHang WHERE MAKH=?";
+
         try {
-            if (checkHD(maKH)== false) {
-                sql = "delete from TheThanhVien where MAKH = ? \n" +
-                        "delete from KhachHang where MAKH=?";
-                conn = new DBContext().getCon();
-                ps=conn.prepareStatement(sql);
+            conn = new DBContext().getCon();
+            conn.setAutoCommit(false); // Bắt đầu một transaction
+
+            // Xoá từ bảng TheThanhVien
+            try (PreparedStatement ps = conn.prepareStatement(sqlDeleteTheThanhVien)) {
                 ps.setString(1, maKH);
-                ps.setString(2, maKH);
                 ps.executeUpdate();
             }
-            else{
-                sql = "delete from TheThanhVien where MAKH = ? \n" +
-                        "update HoaDonBanHang set MAKH = null where MAKH = ? \n" +
-                        "delete from KhachHang where MAKH=?" ;
-                conn = new DBContext().getCon();
-                ps=conn.prepareStatement(sql);
+
+            if (checkHD(maKH)) {
+                // Cập nhật bảng HoaDonBanHang nếu cần
+                try (PreparedStatement ps = conn.prepareStatement(sqlUpdateHoaDonBanHang)) {
+                    ps.setString(1, maKH);
+                    ps.executeUpdate();
+                }
+            }
+
+            // Xoá từ bảng KhachHang
+            try (PreparedStatement ps = conn.prepareStatement(sqlDeleteKhachHang)) {
                 ps.setString(1, maKH);
-                ps.setString(2, maKH);
-                ps.setString(3, maKH);
                 ps.executeUpdate();
             }
-            
+
+            conn.commit(); // Commit transaction nếu mọi thứ thành công
         } catch (Exception e) {
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Rollback nếu có lỗi
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace(); // In lỗi ra để dễ dàng kiểm tra
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true); // Đặt lại chế độ auto commit
+                    conn.close(); // Đóng kết nối
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
+
 
     public User getUserByID(String maKH) {
         String query = "select * from KhachHang where MAKH = ?";

@@ -12,14 +12,12 @@ import java.sql.DriverManager;
  * @author admin
  */
 public class DBContext {
-    private final String dbName = "QLCHDD";
-    private final String userName = "sa";
-    private final String passWord = "Password.1";
-    private final String url = "jdbc:sqlserver://localhost:1433;databaseName=" + dbName + ";encrypt=true;trustServerCertificate=true;";
-
     public Connection getCon() throws Exception {
-        Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-        return DriverManager.getConnection(url, userName, passWord);
+        Class.forName("com.mysql.jdbc.Driver");
+        String url = "jdbc:mysql://localhost:3306/QLCHDD";
+        String username = "root";
+        String pass = "12345678";
+        return DriverManager.getConnection(url,username,pass);
     }
 
 }
