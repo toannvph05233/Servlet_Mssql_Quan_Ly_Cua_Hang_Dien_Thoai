@@ -1,6 +1,6 @@
 <%-- 
     Document   : UpdateUser
-    Created on : May 16, 2021, 4:35:33 PM
+    Created on : May 16, 2024, 4:35:33 PM
     Author     : admin
 --%>
 
@@ -25,7 +25,7 @@
                 <a href="product"><i class="fa fa-edit"></i> Product</a>
                 <a href="managerH"><i class="fa fa-wrench"></i> Manager</a>
                 <a href="invoice"><i class="fa fa-list"></i> Invoice</a>
-                <a href="Notification.jsp"><i class="fa fa-bell"></i> Notification</a>
+
                 <a href="registry"><i class="fa fa-cogs"></i> Settings</a>
             </div>
         </aside>

@@ -9,34 +9,34 @@ function showPrice(){
 }
 
 function LoginMess(){
-    var option = confirm("Bạn có chắc muốn đăng xuất?");
+    var option = confirm("Logout?");
     if(option === true){
         window.location.href = 'login';
     }
 }
 
 function showMessP(id){
-    var option = confirm("Bạn có chắc muốn xóa mặt hàng có id là "+id+"?");
+    var option = confirm("Delete id = "+id+"?");
     if(option === true){
         window.location.href = 'deleteproduct?pid='+id;
     }
 }
 
 function showMessU(id){
-    var option = confirm("Bạn có chắc muốn xóa khách hàng có id là "+id+"?");
+    var option = confirm("Delete id = "+id+"?");
     if(option === true){
         window.location.href = 'deleteuser?uid='+id;
     }
 }
 
 function showMessE(id){
-    var option = confirm("Bạn có chắc muốn xóa nhân viên có id là "+id+"?");
+    var option = confirm("Delete id = "+id+"?");
     if(option === true){
         window.location.href = 'deletemanager?eid='+id;
     }
 }
 function showMessI(id){
-    var option = confirm("Bạn có chắc muốn xóa hóa đơn có id là "+id+"?");
+    var option = confirm("Delete id = "+id+"?");
     if(option === true){
         window.location.href = 'deleteinvoice?iid='+id;
     }

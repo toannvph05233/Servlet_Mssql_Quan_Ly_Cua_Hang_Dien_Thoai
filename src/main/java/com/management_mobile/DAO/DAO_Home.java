@@ -80,9 +80,8 @@ public class DAO_Home {
     }
 
     public int getAllMoney() {
-        String queryOrder = "select sum(b.SL * b.DONGIA) as[TONGTIEN]\n" +
-                                "from HoaDonBanHang a, CT_HDBH b\n" +
-                                "where a.MAHDBH = b.MAHDBH";
+        String queryOrder = "select sum(TONGTIEN)\n" +
+                "from HoaDonBanHang";
         try {
             conn = new DBContext().getCon();
             ps=conn.prepareStatement(queryOrder);
